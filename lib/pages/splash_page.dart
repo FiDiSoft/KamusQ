@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:kamusq/pages/welcome_page.dart';
 import 'package:kamusq/theme.dart';
 import 'package:lottie/lottie.dart';
 
@@ -13,7 +14,7 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   void initState(){
     super.initState();
-    Timer(Duration(seconds: 5), (){
+    Timer(Duration(seconds: 3), (){
       Navigator.push(context, MaterialPageRoute(builder: (context) => WelcomePage()));
     });
   }
