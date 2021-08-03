@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 
 // theme application
@@ -12,25 +13,12 @@ Color inputColor = Color(0xffF8F8F8);
 Color hintColor = Color(0xffBDBDBD);
 
 // Text Style
-TextStyle blueTextStyle = TextStyle(
-  color: blue,
-);
+TextStyle blueTextStyle = GoogleFonts.poppins(color: blue);
+TextStyle yellowTextStyle = GoogleFonts.poppins(color: yellow);
+TextStyle greyTextStyle = GoogleFonts.poppins(color: grey);
+TextStyle whiteTextStyle = GoogleFonts.poppins(color: white);
+TextStyle blackTextStyle = GoogleFonts.poppins(color: black);
 
-TextStyle yellowTextStyle = TextStyle(
-  color: yellow,
-);
-
-TextStyle greyTextStyle = TextStyle(
-  color: grey,
-);
-
-TextStyle whiteTextStyle = TextStyle(
-  color: white,
-);
-
-TextStyle blackTextStyle = TextStyle(
-  color: black,
-);
 
 // Font Weight
 FontWeight ligth = FontWeight.w300;
