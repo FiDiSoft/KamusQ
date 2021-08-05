@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kamusq/pages/login_page.dart';
 import 'package:kamusq/theme.dart';
 
 
@@ -34,7 +35,7 @@ class WelcomePage extends StatelessWidget {
                   ),
                   child: TextButton(
                     onPressed: (){
-                        
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
                     }, 
                     child: Text('Login', style: whiteTextStyle.copyWith(fontSize: 20),)),
                 ),
