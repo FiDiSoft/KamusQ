@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kamusq/pages/login_page.dart';
+import 'package:kamusq/pages/register_page.dart';
 import 'package:kamusq/theme.dart';
 
 
@@ -49,7 +50,7 @@ class WelcomePage extends StatelessWidget {
                   ),
                   child: TextButton(
                     onPressed: (){
-                        
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPage()));
                     }, 
                     child: Text('Register', style: blackTextStyle.copyWith(fontSize: 20),)),
                 )
