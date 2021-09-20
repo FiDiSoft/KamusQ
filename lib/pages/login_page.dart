@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kamusq/pages/main_page.dart';
 import 'package:kamusq/pages/register_page.dart';
 import 'package:kamusq/theme.dart';
 import 'package:email_validator/email_validator.dart';
@@ -97,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: 60,
                   child: TextButton(
                     onPressed: (){
-                      
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage()));
                     },
                     style: TextButton.styleFrom(
                       backgroundColor: blue,
