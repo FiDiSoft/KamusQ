@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:kamusq/models/auth_services.dart';
 import 'package:kamusq/theme.dart';
+import 'package:kamusq/widgets/listview.dart';
 
 class MainPage extends StatelessWidget {
   final User user;
@@ -102,52 +103,71 @@ class MainPage extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: Stack(
                   children: [
-                    Column(
-                      children: [
-                        Row(
-                      children: [
-                        Text(
-                          'Hello, \nAjeng Hidayati',
-                          style: whiteTextStyle.copyWith(
-                              fontSize: 25, fontWeight: medium),
-                        ),
-                        Spacer(),
-                        CircleAvatar(
-                          radius: 50,
-                          backgroundColor: yellow,
-                          child: CircleAvatar(
-                              radius: 45,
-                              backgroundImage:
-                                  AssetImage("assets/profile.png")),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: 30
-                    ),
-                    TextFormField(
-                    decoration: InputDecoration(
-                        fillColor: inputColor,
-                        filled: true,
-                        hintText: 'find your vocab',
-                        prefixIcon: Icon(Icons.search, color: blue, size: 32),
-                        hintStyle: TextStyle(color: hintColor),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(color: grey)),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(color: blue))),
-                  ),
-                      ]
-                    )
+                    Column(children: [
+                      Row(
+                        children: [
+                          Text(
+                            'Hello, \nAjeng Hidayati',
+                            style: whiteTextStyle.copyWith(
+                                fontSize: 25, fontWeight: medium),
+                          ),
+                          Spacer(),
+                          CircleAvatar(
+                            radius: 50,
+                            backgroundColor: yellow,
+                            child: CircleAvatar(
+                                radius: 45,
+                                backgroundImage:
+                                    AssetImage("assets/profile.png")),
+                          )
+                        ],
+                      ),
+                      SizedBox(height: 30),
+                      TextFormField(
+                        decoration: InputDecoration(
+                            fillColor: inputColor,
+                            filled: true,
+                            hintText: 'find your vocab',
+                            prefixIcon:
+                                Icon(Icons.search, color: blue, size: 32),
+                            hintStyle: TextStyle(color: hintColor),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(color: grey)),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(color: blue))),
+                      ),
+                    ])
                   ],
                 ),
               ),
             ),
+            Container(
+              width: double.infinity,
+              height: 460,
+              child: ListView.builder(
+                itemBuilder: (context, index){
+                  return InkWell(
+                    onTap: (){
+
+                    },
+                    child: Card(
+                      color: blue,
+                      margin: EdgeInsets.all(20),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Text("Apple", style: whiteTextStyle.copyWith(fontSize: 20),),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            )
           ],
-        )
-      )
-    );
+        )));
   }
 }
