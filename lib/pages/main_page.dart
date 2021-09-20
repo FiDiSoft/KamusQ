@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flappy_search_bar_ns/flappy_search_bar_ns.dart';
 import 'package:flutter/material.dart';
 import 'package:kamusq/models/auth_services.dart';
 import 'package:kamusq/theme.dart';
@@ -13,10 +12,13 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: blue,
-          elevation: 0,
-          iconTheme: IconThemeData(color: Colors.white)
-        ),
+            backgroundColor: blue,
+            elevation: 0,
+            iconTheme: IconThemeData(color: Colors.white)),
+        floatingActionButton: FloatingActionButton(
+            onPressed: () {},
+            child: const Icon(Icons.add),
+            backgroundColor: yellow),
         drawer: Drawer(
             child: ListView(
           padding: EdgeInsets.zero,
@@ -67,9 +69,9 @@ class MainPage extends StatelessWidget {
                             content: Text("Do you want Log Out? "),
                             actions: [
                               TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context, "No");
-                              }, 
+                                  onPressed: () {
+                                    Navigator.pop(context, "No");
+                                  },
                                   child: Text("No")),
                               TextButton(
                                   onPressed: () async {
@@ -100,7 +102,9 @@ class MainPage extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: Stack(
                   children: [
-                    Row(
+                    Column(
+                      children: [
+                        Row(
                       children: [
                         Text(
                           'Hello, \nAjeng Hidayati',
@@ -112,17 +116,38 @@ class MainPage extends StatelessWidget {
                           radius: 50,
                           backgroundColor: yellow,
                           child: CircleAvatar(
-                            radius: 45,
-                            backgroundImage: AssetImage('assets/women.jpeg'),
-                          ),
+                              radius: 45,
+                              backgroundImage:
+                                  AssetImage("assets/profile.png")),
                         )
                       ],
                     ),
+                    SizedBox(
+                      height: 30
+                    ),
+                    TextFormField(
+                    decoration: InputDecoration(
+                        fillColor: inputColor,
+                        filled: true,
+                        hintText: 'find your vocab',
+                        prefixIcon: Icon(Icons.search, color: blue, size: 32),
+                        hintStyle: TextStyle(color: hintColor),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: grey)),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: blue))),
+                  ),
+                      ]
+                    )
                   ],
                 ),
               ),
             ),
           ],
-        )));
+        )
+      )
+    );
   }
 }
