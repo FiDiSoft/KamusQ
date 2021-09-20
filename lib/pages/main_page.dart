@@ -1,37 +1,48 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flappy_search_bar_ns/flappy_search_bar_ns.dart';
 import 'package:flutter/material.dart';
+import 'package:kamusq/models/auth_services.dart';
 import 'package:kamusq/theme.dart';
 
 class MainPage extends StatelessWidget {
-  const MainPage({Key? key}) : super(key: key);
+  final User user;
+
+  const MainPage({Key? key, required this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(backgroundColor: blue,
-        elevation: 0,
+        appBar: AppBar(
+          backgroundColor: blue,
+          elevation: 0,
         ),
         drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  color: blue
-                ),
-                child:Row(
+            child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(color: blue),
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Kamus', style: whiteTextStyle.copyWith(fontSize: 30, fontWeight: bold),),
-                  Text('Q', style: yellowTextStyle.copyWith(fontSize: 30, fontWeight: bold),)
+                  Text(
+                    'Kamus',
+                    style:
+                        whiteTextStyle.copyWith(fontSize: 30, fontWeight: bold),
+                  ),
+                  Text(
+                    'Q',
+                    style: yellowTextStyle.copyWith(
+                        fontSize: 30, fontWeight: bold),
+                  )
                 ],
               ),
-              ),
-              ListTile(
+            ),
+            ListTile(
               title: const Text('Profile'),
-              leading:  Icon(Icons.account_circle),
+              leading: Icon(Icons.account_circle),
               minLeadingWidth: 10,
-              onTap: (){
+              onTap: () {
                 Navigator.pop(context);
               },
             ),
@@ -39,7 +50,7 @@ class MainPage extends StatelessWidget {
               title: const Text('Setting'),
               leading: Icon(Icons.settings),
               minLeadingWidth: 10,
-              onTap: (){
+              onTap: () {
                 Navigator.pop(context);
               },
             ),
@@ -47,51 +58,59 @@ class MainPage extends StatelessWidget {
               title: const Text('Exit'),
               leading: Icon(Icons.exit_to_app),
               minLeadingWidth: 10,
-              onTap: (){
+              onTap: () {
                 Navigator.pop(context);
               },
             ),
-            ],
-          )
-        ),
+          ],
+        )),
         body: SafeArea(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          height: 230.0,
-          width: double.infinity,
-          decoration: new BoxDecoration(
-            color: blue,
-            boxShadow: [new BoxShadow(blurRadius: 10.0)],
-            borderRadius: new BorderRadius.vertical(
-                bottom: Radius.circular(30),
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20),
-          child: Stack(
-            children: [
-              Row(
-                children: [
-                  Text('Hello, \nAjeng Hidayati', style: whiteTextStyle.copyWith(fontSize: 25, fontWeight: medium),),
-                  Spacer(),
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundColor: yellow,
-                    child: CircleAvatar(
-                      radius: 45,
-                      backgroundImage: AssetImage('assets/women.jpeg'),
-                    ),
-                  )
-                ],
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 230.0,
+              width: double.infinity,
+              decoration: new BoxDecoration(
+                color: blue,
+                boxShadow: [new BoxShadow(blurRadius: 10.0)],
+                borderRadius: new BorderRadius.vertical(
+                  bottom: Radius.circular(30),
+                ),
               ),
-            ],
-          ),
-        ),
-        ),
-        
-      ],
-    )));
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Stack(
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          'Hello, \nAjeng Hidayati',
+                          style: whiteTextStyle.copyWith(
+                              fontSize: 25, fontWeight: medium),
+                        ),
+                        Spacer(),
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundColor: yellow,
+                          child: CircleAvatar(
+                            radius: 45,
+                            backgroundImage: AssetImage('assets/women.jpeg'),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await AuthServices.logOut();
+              },
+              child: Text('Log Out'),
+            )
+          ],
+        )));
   }
 }
