@@ -15,6 +15,7 @@ class MainPage extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: blue,
           elevation: 0,
+          iconTheme: IconThemeData(color: Colors.white)
         ),
         drawer: Drawer(
             child: ListView(
@@ -55,11 +56,28 @@ class MainPage extends StatelessWidget {
               },
             ),
             ListTile(
-              title: const Text('Exit'),
+              title: const Text('Log Out'),
               leading: Icon(Icons.exit_to_app),
               minLeadingWidth: 10,
               onTap: () {
-                Navigator.pop(context);
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                            title: Text("Log Out"),
+                            content: Text("Do you want Log Out? "),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context, "No");
+                              }, 
+                                  child: Text("No")),
+                              TextButton(
+                                  onPressed: () async {
+                                    await AuthServices.logOut();
+                                    Navigator.pop(context, "Yes");
+                                  },
+                                  child: Text("Yes")),
+                            ]));
               },
             ),
           ],
@@ -104,12 +122,6 @@ class MainPage extends StatelessWidget {
                 ),
               ),
             ),
-            ElevatedButton(
-              onPressed: () async {
-                await AuthServices.logOut();
-              },
-              child: Text('Log Out'),
-            )
           ],
         )));
   }
