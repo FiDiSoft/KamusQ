@@ -103,7 +103,9 @@ class MainPage extends StatelessWidget {
           }
 
           return StreamBuilder<QuerySnapshot>(
-            stream: VocabServices.vocabCollection.snapshots(),
+            stream: VocabServices.vocabCollection
+                .orderBy('timestamp', descending: true)
+                .snapshots(),
             builder: (context, snapshotVocabs) {
               if (snapshotVocabs.hasError) {
                 return Text('Something went wrong');
