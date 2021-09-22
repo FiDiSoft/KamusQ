@@ -13,6 +13,13 @@ class _AddPageState extends State<AddPage> {
   TextEditingController meaningController = TextEditingController(text: '');
 
   @override
+  void dispose() {
+    vocabController.dispose();
+    meaningController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -27,7 +34,7 @@ class _AddPageState extends State<AddPage> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                VocabsServices.addVocab(
+                VocabServices.addVocab(
                     vocabController.text.toUpperCase(),
                     meaningController.text[0].toUpperCase() +
                         meaningController.text.substring(1));
