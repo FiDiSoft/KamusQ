@@ -9,6 +9,7 @@ class VocabServices {
   static Map<String, dynamic> _mapVocab(
       {required String vocab, required String meaning}) {
     return {
+      'timestamp': FieldValue.serverTimestamp(),
       'vocab': vocab,
       'meaning': meaning,
     };
