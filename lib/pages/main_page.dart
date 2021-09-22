@@ -5,6 +5,7 @@ import 'package:kamusq/models/auth_services.dart';
 import 'package:kamusq/models/users_services.dart';
 import 'package:kamusq/models/vocab_services.dart';
 import 'package:kamusq/pages/add_page.dart';
+import 'package:kamusq/pages/update_page.dart';
 import 'package:kamusq/theme.dart';
 import 'package:kamusq/widgets/listview.dart';
 
@@ -93,13 +94,24 @@ class MainPage extends StatelessWidget {
       body: StreamBuilder<QuerySnapshot>(
         stream: UsersServices.usersCollection.snapshots(),
         builder: (context, snapshotUsers) {
-          if (!snapshotUsers.hasData) return Center(child: Text('Loading...'));
+          if (snapshotUsers.hasError) {
+            return Text('Something went wrong');
+          }
+
+          if (snapshotUsers.connectionState == ConnectionState.waiting) {
+            return Text("Loading");
+          }
 
           return StreamBuilder<QuerySnapshot>(
-            stream: VocabsServices.vocabsCollection.snapshots(),
+            stream: VocabServices.vocabCollection.snapshots(),
             builder: (context, snapshotVocabs) {
-              if (!snapshotVocabs.hasData)
-                return Center(child: Text('Loading...'));
+              if (snapshotVocabs.hasError) {
+                return Text('Something went wrong');
+              }
+
+              if (snapshotVocabs.connectionState == ConnectionState.waiting) {
+                return Text("Loading");
+              }
 
               return CustomScrollView(
                 slivers: [
@@ -189,12 +201,23 @@ class MainPage extends StatelessWidget {
                                         fontSize: 15, color: Colors.grey),
                                   ),
                                   IconButton(
-                                    onPressed: () async {
-                                      await VocabsServices.firebaseFirestore
-                                          .runTransaction(
-                                        (transaction) async => transaction
-                                            .delete(_vocabsDocument.reference),
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => UpdatePage(
+                                              mapVocab: _mapVocab,
+                                              docRef:
+                                                  _vocabsDocument.reference),
+                                        ),
                                       );
+                                    },
+                                    icon: Icon(Icons.edit),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      VocabServices.deleteVocab(
+                                          _vocabsDocument.reference);
                                     },
                                     icon: Icon(Icons.delete),
                                   )
