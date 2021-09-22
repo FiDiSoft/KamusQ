@@ -1,18 +1,37 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class VocabsServices {
+class VocabServices {
   static FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
-  static CollectionReference vocabsCollection =
+  static CollectionReference vocabCollection =
       firebaseFirestore.collection('vocabs');
+
+  static Map<String, dynamic> _mapVocab(
+      {required String vocab, required String meaning}) {
+    return {
+      'vocab': vocab,
+      'meaning': meaning,
+    };
+  }
 
   static Future<DocumentReference<Object?>> addVocab(
       String vocab, String meaning) async {
-    return await vocabsCollection.add(
-      {
-        'vocab': vocab,
-        'meaning': meaning,
+    return await vocabCollection.add(_mapVocab(vocab: vocab, meaning: meaning));
+  }
+
+  static Future<Transaction> updateVocab(
+      String vocab, String meaning, DocumentReference docRef) async {
+    return await firebaseFirestore.runTransaction(
+      (transaction) async {
+        return transaction.update(
+            docRef, _mapVocab(vocab: vocab, meaning: meaning));
       },
+    );
+  }
+
+  static Future<Transaction> deleteVocab(DocumentReference docRef) async {
+    return await firebaseFirestore.runTransaction(
+      (transaction) async => transaction.delete(docRef),
     );
   }
 }
