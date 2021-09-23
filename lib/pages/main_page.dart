@@ -2,12 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:kamusq/models/auth_services.dart';
-import 'package:kamusq/models/users_services.dart';
 import 'package:kamusq/models/vocab_services.dart';
 import 'package:kamusq/pages/add_page.dart';
 import 'package:kamusq/pages/update_page.dart';
 import 'package:kamusq/theme.dart';
-import 'package:kamusq/widgets/listview.dart';
 
 class MainPage extends StatelessWidget {
   final User user;
@@ -23,7 +21,11 @@ class MainPage extends StatelessWidget {
           iconTheme: IconThemeData(color: Colors.white)),
       floatingActionButton: FloatingActionButton(
           onPressed: () => Navigator.push(
-              context, MaterialPageRoute(builder: (_) => AddPage())),
+              context,
+              MaterialPageRoute(
+                  builder: (_) => AddPage(
+                        uid: user.uid,
+                      ))),
           child: const Icon(Icons.add),
           backgroundColor: yellow),
       drawer: Drawer(
@@ -92,149 +94,136 @@ class MainPage extends StatelessWidget {
         ],
       )),
       body: StreamBuilder<QuerySnapshot>(
-        stream: UsersServices.usersCollection.snapshots(),
-        builder: (context, snapshotUsers) {
-          if (snapshotUsers.hasError) {
+        stream: VocabServices.firebaseFirestore
+            .collection('userId${user.uid}')
+            .orderBy('timestamp', descending: true)
+            .snapshots(),
+        builder: (context, snapshotVocabs) {
+          user.reload();
+          if (snapshotVocabs.hasError) {
             return Text('Something went wrong');
           }
 
-          if (snapshotUsers.connectionState == ConnectionState.waiting) {
+          if (snapshotVocabs.connectionState == ConnectionState.waiting) {
             return Text("Loading");
           }
 
-          return StreamBuilder<QuerySnapshot>(
-            stream: VocabServices.vocabCollection
-                .orderBy('timestamp', descending: true)
-                .snapshots(),
-            builder: (context, snapshotVocabs) {
-              if (snapshotVocabs.hasError) {
-                return Text('Something went wrong');
-              }
-
-              if (snapshotVocabs.connectionState == ConnectionState.waiting) {
-                return Text("Loading");
-              }
-
-              return CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: Container(
-                      height: 230.0,
-                      width: double.infinity,
-                      decoration: new BoxDecoration(
-                        color: blue,
-                        boxShadow: [new BoxShadow(blurRadius: 10.0)],
-                        borderRadius: new BorderRadius.vertical(
-                          bottom: Radius.circular(30),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 20),
-                        child: Stack(
-                          children: [
-                            Column(children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    'Hello, \nAjeng',
-                                    style: whiteTextStyle.copyWith(
-                                        fontSize: 25, fontWeight: medium),
-                                  ),
-                                  Spacer(),
-                                  CircleAvatar(
-                                    radius: 50,
-                                    backgroundColor: yellow,
-                                    child: CircleAvatar(
-                                        radius: 45,
-                                        backgroundImage:
-                                            AssetImage("assets/profile.png")),
-                                  )
-                                ],
-                              ),
-                              SizedBox(height: 30),
-                              TextFormField(
-                                decoration: InputDecoration(
-                                    fillColor: inputColor,
-                                    filled: true,
-                                    hintText: 'find your vocab',
-                                    prefixIcon: Icon(Icons.search,
-                                        color: blue, size: 32),
-                                    hintStyle: TextStyle(color: hintColor),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide(color: grey)),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide(color: blue))),
-                              ),
-                            ])
-                          ],
-                        ),
-                      ),
+          return CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Container(
+                  height: 230.0,
+                  width: double.infinity,
+                  decoration: new BoxDecoration(
+                    color: blue,
+                    boxShadow: [new BoxShadow(blurRadius: 10.0)],
+                    borderRadius: new BorderRadius.vertical(
+                      bottom: Radius.circular(30),
                     ),
                   ),
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, i) {
-                        DocumentSnapshot _vocabsDocument =
-                            snapshotVocabs.data!.docs[i];
-                        Map<String, dynamic> _mapVocab =
-                            _vocabsDocument.data() as Map<String, dynamic>;
-
-                        return InkWell(
-                          onTap: () {},
-                          child: Card(
-                            color: blue,
-                            margin: EdgeInsets.fromLTRB(20, 15, 20, 5),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    "${_mapVocab['vocab']}",
-                                    style:
-                                        whiteTextStyle.copyWith(fontSize: 20),
-                                  ),
-                                  Text(
-                                    "${_mapVocab['meaning']}",
-                                    style: whiteTextStyle.copyWith(
-                                        fontSize: 15, color: Colors.grey),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (_) => UpdatePage(
-                                              mapVocab: _mapVocab,
-                                              docRef:
-                                                  _vocabsDocument.reference),
-                                        ),
-                                      );
-                                    },
-                                    icon: Icon(Icons.edit),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      VocabServices.deleteVocab(
-                                          _vocabsDocument.reference);
-                                    },
-                                    icon: Icon(Icons.delete),
-                                  )
-                                ],
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    child: Stack(
+                      children: [
+                        Column(children: [
+                          Row(
+                            children: [
+                              Text(
+                                'Hello, \n${(user.displayName != null) ? user.displayName : "No Name"}',
+                                style: whiteTextStyle.copyWith(
+                                    fontSize: 25, fontWeight: medium),
                               ),
-                            ),
+                              Spacer(),
+                              CircleAvatar(
+                                radius: 50,
+                                backgroundColor: yellow,
+                                child: CircleAvatar(
+                                    radius: 45,
+                                    backgroundImage:
+                                        AssetImage("assets/profile.png")),
+                              )
+                            ],
                           ),
-                        );
-                      },
-                      childCount: snapshotVocabs.data!.docs.length,
+                          SizedBox(height: 30),
+                          TextFormField(
+                            decoration: InputDecoration(
+                                fillColor: inputColor,
+                                filled: true,
+                                hintText: 'find your vocab',
+                                prefixIcon:
+                                    Icon(Icons.search, color: blue, size: 32),
+                                hintStyle: TextStyle(color: hintColor),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(color: grey)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(color: blue))),
+                          ),
+                        ])
+                      ],
                     ),
-                  )
-                ],
-              );
-            },
+                  ),
+                ),
+              ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, i) {
+                    DocumentSnapshot _vocabsDocument =
+                        snapshotVocabs.data!.docs[i];
+                    Map<String, dynamic> _mapVocab =
+                        _vocabsDocument.data() as Map<String, dynamic>;
+
+                    return InkWell(
+                      onTap: () {},
+                      child: Card(
+                        color: blue,
+                        margin: EdgeInsets.fromLTRB(20, 15, 20, 5),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            children: [
+                              Text(
+                                "${_mapVocab['vocab']}",
+                                style: whiteTextStyle.copyWith(fontSize: 20),
+                              ),
+                              Text(
+                                "${_mapVocab['meaning']}",
+                                style: whiteTextStyle.copyWith(
+                                    fontSize: 15, color: Colors.grey),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => UpdatePage(
+                                          mapVocab: _mapVocab,
+                                          docRef: _vocabsDocument.reference),
+                                    ),
+                                  );
+                                },
+                                icon: Icon(Icons.edit),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  VocabServices.deleteVocab(
+                                      _vocabsDocument.reference);
+                                },
+                                icon: Icon(Icons.delete),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  childCount: snapshotVocabs.data!.docs.length,
+                ),
+              )
+            ],
           );
         },
       ),
