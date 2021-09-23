@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+
 import 'package:kamusq/models/vocab_services.dart';
 
 class AddPage extends StatefulWidget {
-  const AddPage({Key? key}) : super(key: key);
+  const AddPage({
+    Key? key,
+    required this.uid,
+  }) : super(key: key);
+
+  final String uid;
 
   @override
   _AddPageState createState() => _AddPageState();
@@ -37,7 +43,8 @@ class _AddPageState extends State<AddPage> {
                 VocabServices.addVocab(
                     vocabController.text.toUpperCase(),
                     meaningController.text[0].toUpperCase() +
-                        meaningController.text.substring(1));
+                        meaningController.text.substring(1),
+                    widget.uid);
 
                 vocabController.text = '';
                 meaningController.text = '';
