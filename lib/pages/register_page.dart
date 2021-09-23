@@ -14,9 +14,17 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  TextEditingController usernameController = TextEditingController(text: "");
   TextEditingController emailController = TextEditingController(text: "");
   TextEditingController passwordController = TextEditingController(text: "");
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +70,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     height: 5,
                   ),
                   TextFormField(
+                    controller: usernameController,
                     decoration: InputDecoration(
                         fillColor: inputColor,
                         filled: true,
@@ -148,6 +157,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             await AuthServices.register(
+                                username: usernameController.text,
                                 email: emailController.text,
                                 password: passwordController.text);
                           }
