@@ -3,9 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class VocabServices {
   static FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
-  static CollectionReference vocabCollection =
-      firebaseFirestore.collection('vocabs');
-
   static Map<String, dynamic> _mapVocab(
       {required String vocab, required String meaning}) {
     return {
@@ -16,8 +13,10 @@ class VocabServices {
   }
 
   static Future<DocumentReference<Object?>> addVocab(
-      String vocab, String meaning) async {
-    return await vocabCollection.add(_mapVocab(vocab: vocab, meaning: meaning));
+      String vocab, String meaning, String uid) async {
+    return await firebaseFirestore
+        .collection('userId$uid')
+        .add(_mapVocab(vocab: vocab, meaning: meaning));
   }
 
   static Future<Transaction> updateVocab(
