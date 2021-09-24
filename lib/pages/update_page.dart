@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
 import 'package:kamusq/models/vocab_services.dart';
 
 class UpdatePage extends StatefulWidget {
@@ -50,11 +49,24 @@ class _UpdatePageState extends State<UpdatePage> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
+                String getVocabText = vocabController.text;
+
                 VocabServices.updateVocab(
-                    vocabController.text.toUpperCase(),
-                    meaningController.text[0].toUpperCase() +
-                        meaningController.text.substring(1),
-                    widget.docRef);
+                  vocab: vocabController.text.toUpperCase(),
+                  meaning: meaningController.text[0].toUpperCase() +
+                      meaningController.text.substring(1),
+                  docRef: widget.docRef,
+                  keywords: [
+                    getVocabText[0],
+                    getVocabText[0] + getVocabText[1],
+                    getVocabText[0] + getVocabText[1] + getVocabText[2],
+                    getVocabText[0] +
+                        getVocabText[1] +
+                        getVocabText[2] +
+                        getVocabText[3],
+                    getVocabText
+                  ],
+                );
 
                 Navigator.pop(context);
               },
