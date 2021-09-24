@@ -40,11 +40,24 @@ class _AddPageState extends State<AddPage> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
+                String getVocabText = vocabController.text;
+
                 VocabServices.addVocab(
-                    vocabController.text.toUpperCase(),
-                    meaningController.text[0].toUpperCase() +
-                        meaningController.text.substring(1),
-                    widget.uid);
+                  vocab: vocabController.text.toUpperCase(),
+                  meaning: meaningController.text[0].toUpperCase() +
+                      meaningController.text.substring(1),
+                  uid: widget.uid,
+                  keywords: [
+                    getVocabText[0],
+                    getVocabText[0] + getVocabText[1],
+                    getVocabText[0] + getVocabText[1] + getVocabText[2],
+                    getVocabText[0] +
+                        getVocabText[1] +
+                        getVocabText[2] +
+                        getVocabText[3],
+                    getVocabText
+                  ],
+                );
 
                 vocabController.text = '';
                 meaningController.text = '';
