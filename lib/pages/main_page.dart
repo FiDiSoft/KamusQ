@@ -4,14 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:kamusq/models/auth_services.dart';
 import 'package:kamusq/models/vocab_services.dart';
 import 'package:kamusq/pages/add_page.dart';
+import 'package:kamusq/pages/profile_page.dart';
 import 'package:kamusq/pages/update_page.dart';
 import 'package:kamusq/theme.dart';
 
-class MainPage extends StatelessWidget {
+class MainPage extends StatefulWidget {
   final User user;
 
   const MainPage({Key? key, required this.user}) : super(key: key);
 
+  @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +30,7 @@ class MainPage extends StatelessWidget {
               context,
               MaterialPageRoute(
                   builder: (_) => AddPage(
-                        uid: user.uid,
+                        uid: widget.user.uid,
                       ))),
           child: const Icon(Icons.add),
           backgroundColor: yellow),
@@ -55,7 +61,10 @@ class MainPage extends StatelessWidget {
             leading: Icon(Icons.account_circle),
             minLeadingWidth: 10,
             onTap: () {
-              Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => ProfilePage(user: widget.user)));
             },
           ),
           ListTile(
@@ -95,11 +104,10 @@ class MainPage extends StatelessWidget {
       )),
       body: StreamBuilder<QuerySnapshot>(
         stream: VocabServices.firebaseFirestore
-            .collection('userId${user.uid}')
+            .collection('userId${widget.user.uid}')
             .orderBy('timestamp', descending: true)
             .snapshots(),
         builder: (context, snapshotVocabs) {
-          user.reload();
           if (snapshotVocabs.hasError) {
             return Text('Something went wrong');
           }
@@ -129,7 +137,7 @@ class MainPage extends StatelessWidget {
                           Row(
                             children: [
                               Text(
-                                'Hello, \n${(user.displayName != null) ? user.displayName : "No Name"}',
+                                'Hello, \n${(widget.user.displayName != null && widget.user.displayName != '') ? widget.user.displayName : "No Name"}',
                                 style: whiteTextStyle.copyWith(
                                     fontSize: 25, fontWeight: medium),
                               ),
