@@ -16,6 +16,13 @@ class _LoginPageState extends State<LoginPage> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(

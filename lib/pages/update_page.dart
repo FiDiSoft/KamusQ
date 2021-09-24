@@ -1,22 +1,32 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:kamusq/models/vocab_services.dart';
 
-class AddPage extends StatefulWidget {
-  const AddPage({
+class UpdatePage extends StatefulWidget {
+  const UpdatePage({
     Key? key,
-    required this.uid,
+    required this.mapVocab,
+    required this.docRef,
   }) : super(key: key);
 
-  final String uid;
+  final Map<String, dynamic> mapVocab;
+  final DocumentReference docRef;
 
   @override
-  _AddPageState createState() => _AddPageState();
+  _UpdatePageState createState() => _UpdatePageState();
 }
 
-class _AddPageState extends State<AddPage> {
-  TextEditingController vocabController = TextEditingController(text: '');
-  TextEditingController meaningController = TextEditingController(text: '');
+class _UpdatePageState extends State<UpdatePage> {
+  var vocabController;
+  var meaningController;
+
+  @override
+  void initState() {
+    vocabController = TextEditingController(text: widget.mapVocab['vocab']);
+    meaningController = TextEditingController(text: widget.mapVocab['meaning']);
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -40,18 +50,15 @@ class _AddPageState extends State<AddPage> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                VocabServices.addVocab(
+                VocabServices.updateVocab(
                     vocabController.text.toUpperCase(),
                     meaningController.text[0].toUpperCase() +
                         meaningController.text.substring(1),
-                    widget.uid);
-
-                vocabController.text = '';
-                meaningController.text = '';
+                    widget.docRef);
 
                 Navigator.pop(context);
               },
-              child: Text('add vocab'),
+              child: Text('update vocab'),
             )
           ]),
         ),
