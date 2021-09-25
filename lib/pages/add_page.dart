@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:kamusq/models/vocab_services.dart';
 
 class AddPage extends StatefulWidget {
@@ -40,27 +39,24 @@ class _AddPageState extends State<AddPage> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                String getVocabText = vocabController.text;
+                String getVocabText = vocabController.text.toUpperCase();
+                String getMeaningText =
+                    meaningController.text[0].toUpperCase() +
+                        meaningController.text.substring(1);
+                List<String> keywords = [];
+                String searchKey = "";
+
+                for (int i = 0; i < getVocabText.split('').length; i++) {
+                  searchKey = searchKey + getVocabText[i];
+                  keywords.add(searchKey);
+                }
 
                 VocabServices.addVocab(
-                  vocab: vocabController.text.toUpperCase(),
-                  meaning: meaningController.text[0].toUpperCase() +
-                      meaningController.text.substring(1),
+                  vocab: getVocabText,
+                  meaning: getMeaningText,
                   uid: widget.uid,
-                  keywords: [
-                    getVocabText[0],
-                    getVocabText[0] + getVocabText[1],
-                    getVocabText[0] + getVocabText[1] + getVocabText[2],
-                    getVocabText[0] +
-                        getVocabText[1] +
-                        getVocabText[2] +
-                        getVocabText[3],
-                    getVocabText
-                  ],
+                  keywords: keywords,
                 );
-
-                vocabController.text = '';
-                meaningController.text = '';
 
                 Navigator.pop(context);
               },

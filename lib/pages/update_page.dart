@@ -49,23 +49,23 @@ class _UpdatePageState extends State<UpdatePage> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                String getVocabText = vocabController.text;
+                String getVocabText = vocabController.text.toUpperCase();
+                String getMeaningText =
+                    meaningController.text[0].toUpperCase() +
+                        meaningController.text.substring(1);
+                List<String> keywords = [];
+                String searchKey = "";
+
+                for (int i = 0; i < getVocabText.split('').length; i++) {
+                  searchKey = searchKey + getVocabText[i];
+                  keywords.add(searchKey);
+                }
 
                 VocabServices.updateVocab(
-                  vocab: vocabController.text.toUpperCase(),
-                  meaning: meaningController.text[0].toUpperCase() +
-                      meaningController.text.substring(1),
+                  vocab: getVocabText,
+                  meaning: getMeaningText,
                   docRef: widget.docRef,
-                  keywords: [
-                    getVocabText[0],
-                    getVocabText[0] + getVocabText[1],
-                    getVocabText[0] + getVocabText[1] + getVocabText[2],
-                    getVocabText[0] +
-                        getVocabText[1] +
-                        getVocabText[2] +
-                        getVocabText[3],
-                    getVocabText
-                  ],
+                  keywords: keywords,
                 );
 
                 Navigator.pop(context);
