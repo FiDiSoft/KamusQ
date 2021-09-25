@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:kamusq/models/auth_services.dart';
 import 'package:kamusq/models/vocab_services.dart';
 import 'package:kamusq/pages/add_page.dart';
+import 'package:kamusq/pages/detail_page.dart';
 import 'package:kamusq/pages/profile_page.dart';
 import 'package:kamusq/pages/update_page.dart';
 import 'package:kamusq/theme.dart';
@@ -28,9 +30,9 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(320),
+        preferredSize: Size.fromHeight(290),
         child: Container(
-          height: 320.0,
+          height: 290.0,
           width: _mediaQuery.width,
           decoration: new BoxDecoration(
             color: blue,
@@ -41,7 +43,7 @@ class _MainPageState extends State<MainPage> {
           ),
           child: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Stack(
                 children: [
                   Column(
@@ -56,9 +58,8 @@ class _MainPageState extends State<MainPage> {
                           color: Colors.white,
                         ),
                       ),
-                      SizedBox(height: 20),
                       Padding(
-                        padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -82,7 +83,7 @@ class _MainPageState extends State<MainPage> {
                       ),
                       SizedBox(height: 20),
                       Padding(
-                        padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
                         child: TextFormField(
                           onChanged: (value) {
                             setState(() {
@@ -219,47 +220,76 @@ class _MainPageState extends State<MainPage> {
               Map<String, dynamic> _mapVocab =
                   _vocabsDocument.data() as Map<String, dynamic>;
 
-              return InkWell(
-                onTap: () {},
-                child: Card(
-                  color: blue,
-                  margin: EdgeInsets.fromLTRB(20, 15, 20, 5),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      children: [
-                        Text(
-                          "${_mapVocab['vocab']}",
-                          style: whiteTextStyle.copyWith(fontSize: 20),
+              return Container(
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(20.0),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => DetailPage(
+                          vocabRef: _vocabsDocument.reference,
+                          mapVocab: _mapVocab,
                         ),
-                        Text(
-                          "${_mapVocab['meaning']}",
-                          style: whiteTextStyle.copyWith(
-                              fontSize: 15, color: Colors.grey),
-                        ),
-                        IconButton(
-                          onPressed: () {
+                      ),
+                    );
+                  },
+                  child: Card(
+                    color: blue,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    child: Slidable(
+                      actionPane: SlidableScrollActionPane(),
+                      actionExtentRatio: 0.20,
+                      secondaryActions: [
+                        IconSlideAction(
+                          onTap: () {
                             Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => UpdatePage(
-                                    mapVocab: _mapVocab,
-                                    docRef: _vocabsDocument.reference),
-                              ),
-                            );
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => UpdatePage(
+                                          docRef: _vocabsDocument.reference,
+                                          mapVocab: _mapVocab,
+                                        )));
                           },
-                          icon: Icon(Icons.edit),
+                          icon: Icons.edit,
+                          color: Colors.green,
                         ),
-                        IconButton(
-                          onPressed: () {
+                        IconSlideAction(
+                          onTap: () {
                             VocabServices.deleteVocab(
                                 _vocabsDocument.reference);
                           },
-                          icon: Icon(Icons.delete),
-                        )
+                          icon: Icons.delete,
+                          color: Colors.red,
+                        ),
                       ],
+                      child: Card(
+                        color: blue,
+                        elevation: 6,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${_mapVocab['vocab']}",
+                                style: whiteTextStyle.copyWith(fontSize: 20),
+                              ),
+                              Text(
+                                "${_mapVocab['meaning']}",
+                                style: whiteTextStyle.copyWith(
+                                    fontSize: 15, color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
