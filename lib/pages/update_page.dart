@@ -19,11 +19,15 @@ class UpdatePage extends StatefulWidget {
 class _UpdatePageState extends State<UpdatePage> {
   var vocabController;
   var meaningController;
+  var descController;
+  var favorite;
 
   @override
   void initState() {
     vocabController = TextEditingController(text: widget.mapVocab['vocab']);
     meaningController = TextEditingController(text: widget.mapVocab['meaning']);
+    descController = TextEditingController(text: widget.mapVocab['desc']);
+    favorite = widget.mapVocab['favorite'];
     super.initState();
   }
 
@@ -31,6 +35,7 @@ class _UpdatePageState extends State<UpdatePage> {
   void dispose() {
     vocabController.dispose();
     meaningController.dispose();
+    descController.dispose();
     super.dispose();
   }
 
@@ -46,6 +51,9 @@ class _UpdatePageState extends State<UpdatePage> {
             TextFormField(
               controller: meaningController,
             ),
+            TextFormField(
+              controller: descController,
+            ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
@@ -53,6 +61,9 @@ class _UpdatePageState extends State<UpdatePage> {
                 String getMeaningText =
                     meaningController.text[0].toUpperCase() +
                         meaningController.text.substring(1);
+                String getDescText = descController.text[0].toUpperCase() +
+                    descController.text.substring(1);
+
                 List<String> keywords = [];
                 String searchKey = "";
 
@@ -64,8 +75,10 @@ class _UpdatePageState extends State<UpdatePage> {
                 VocabServices.updateVocab(
                   vocab: getVocabText,
                   meaning: getMeaningText,
+                  desc: getDescText,
                   docRef: widget.docRef,
                   keywords: keywords,
+                  favorite: favorite,
                 );
 
                 Navigator.pop(context);
