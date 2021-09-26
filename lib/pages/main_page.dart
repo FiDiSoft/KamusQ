@@ -6,6 +6,7 @@ import 'package:kamusq/models/auth_services.dart';
 import 'package:kamusq/models/vocab_services.dart';
 import 'package:kamusq/pages/add_page.dart';
 import 'package:kamusq/pages/detail_page.dart';
+import 'package:kamusq/pages/favorite_page.dart';
 import 'package:kamusq/pages/profile_page.dart';
 import 'package:kamusq/pages/update_page.dart';
 import 'package:kamusq/theme.dart';
@@ -158,6 +159,17 @@ class _MainPageState extends State<MainPage> {
               },
             ),
             ListTile(
+              title: const Text('My Favorite'),
+              leading: Icon(Icons.favorite),
+              minLeadingWidth: 10,
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => FavoritePage(user: widget.user)));
+              },
+            ),
+            ListTile(
               title: const Text('Setting'),
               leading: Icon(Icons.settings),
               minLeadingWidth: 10,
@@ -219,6 +231,7 @@ class _MainPageState extends State<MainPage> {
               DocumentSnapshot _vocabsDocument = vocabSnapshot.data!.docs[i];
               Map<String, dynamic> _mapVocab =
                   _vocabsDocument.data() as Map<String, dynamic>;
+              bool myFavorite = _mapVocab['favorite'];
 
               return Container(
                 margin:
@@ -274,18 +287,47 @@ class _MainPageState extends State<MainPage> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20.0, vertical: 20.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                "${_mapVocab['vocab']}",
-                                style: whiteTextStyle.copyWith(fontSize: 20),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "${_mapVocab['vocab']}",
+                                    style:
+                                        whiteTextStyle.copyWith(fontSize: 20),
+                                  ),
+                                  Text(
+                                    "${_mapVocab['meaning']}",
+                                    style: whiteTextStyle.copyWith(
+                                        fontSize: 15, color: Colors.grey),
+                                  ),
+                                ],
                               ),
-                              Text(
-                                "${_mapVocab['meaning']}",
-                                style: whiteTextStyle.copyWith(
-                                    fontSize: 15, color: Colors.grey),
-                              ),
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    myFavorite = !myFavorite;
+                                  });
+
+                                  VocabServices.updateVocab(
+                                    vocab: _mapVocab['vocab'],
+                                    meaning: _mapVocab['meaning'],
+                                    desc: _mapVocab['desc'],
+                                    docRef: _vocabsDocument.reference,
+                                    keywords: _mapVocab['keywords'],
+                                    favorite: myFavorite,
+                                  );
+                                },
+                                icon: Icon(
+                                  (myFavorite != false)
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  size: 35,
+                                  color: Colors.red,
+                                ),
+                              )
                             ],
                           ),
                         ),
