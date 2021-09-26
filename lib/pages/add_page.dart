@@ -16,11 +16,13 @@ class AddPage extends StatefulWidget {
 class _AddPageState extends State<AddPage> {
   TextEditingController vocabController = TextEditingController(text: '');
   TextEditingController meaningController = TextEditingController(text: '');
+  TextEditingController descController = TextEditingController(text: '');
 
   @override
   void dispose() {
     vocabController.dispose();
     meaningController.dispose();
+    descController.dispose();
     super.dispose();
   }
 
@@ -36,6 +38,9 @@ class _AddPageState extends State<AddPage> {
             TextFormField(
               controller: meaningController,
             ),
+            TextFormField(
+              controller: descController,
+            ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
@@ -43,6 +48,9 @@ class _AddPageState extends State<AddPage> {
                 String getMeaningText =
                     meaningController.text[0].toUpperCase() +
                         meaningController.text.substring(1);
+                String getDescText = descController.text[0].toUpperCase() +
+                    descController.text.substring(1);
+
                 List<String> keywords = [];
                 String searchKey = "";
 
@@ -54,6 +62,7 @@ class _AddPageState extends State<AddPage> {
                 VocabServices.addVocab(
                   vocab: getVocabText,
                   meaning: getMeaningText,
+                  desc: getDescText,
                   uid: widget.uid,
                   keywords: keywords,
                 );
