@@ -1,4 +1,17 @@
 class Validators {
+  static String? validateUsername({required String username}) {
+    // ignore: unnecessary_null_comparison
+    if (username == null) {
+      return null;
+    }
+
+    if (username.isEmpty) {
+      return 'Username cannot be empty!';
+    }
+
+    return null;
+  }
+
   static String? validateEmail({required String email}) {
     // ignore: unnecessary_null_comparison
     if (email == null) {
@@ -8,9 +21,9 @@ class Validators {
         r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
 
     if (email.isEmpty) {
-      return 'Email tidak boleh kosong!';
+      return 'Email cannot be empty!';
     } else if (!emailRegExp.hasMatch(email)) {
-      return 'Masukkan email sesuai dengan format!';
+      return 'Enter the email according to the format!';
     }
 
     return null;
@@ -22,9 +35,33 @@ class Validators {
       return null;
     }
     if (password.isEmpty) {
-      return 'Password tidak boleh kosong!';
+      return 'Password cannot be empty!';
     } else if (password.length < 6) {
-      return 'Masukkan password lebih dari 6 huruf';
+      return 'Enter a password of more than 6 letters';
+    }
+
+    return null;
+  }
+
+  static String? validateVocab({required String vocab}) {
+    // ignore: unnecessary_null_comparison
+    if (vocab == null) {
+      return null;
+    }
+    if (vocab.isEmpty) {
+      return 'Word cannot be empty!';
+    }
+
+    return null;
+  }
+
+  static String? validateMeaning({required String meaning}) {
+    // ignore: unnecessary_null_comparison
+    if (meaning == null) {
+      return null;
+    }
+    if (meaning.isEmpty) {
+      return 'Meaning cannot be empty!';
     }
 
     return null;
