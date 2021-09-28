@@ -4,7 +4,6 @@ import 'package:kamusq/models/auth_services.dart';
 import 'package:kamusq/models/validators.dart';
 import 'package:kamusq/pages/login_page.dart';
 import 'package:kamusq/theme.dart';
-import 'package:email_validator/email_validator.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -157,7 +156,9 @@ class _RegisterPageState extends State<RegisterPage> {
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             await AuthServices.register(
-                                username: usernameController.text,
+                                username:
+                                    usernameController.text[0].toUpperCase() +
+                                        usernameController.text.substring(1),
                                 email: emailController.text,
                                 password: passwordController.text);
                           }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthServices {
@@ -31,6 +33,9 @@ class AuthServices {
       User? user = userCredential.user;
 
       await user!.updateDisplayName(username);
+      await user.updatePhotoURL('');
+
+      await user.reload();
 
       //TODO:  remove the comment if need verif email
       // if (user != null && !user.emailVerified) {
