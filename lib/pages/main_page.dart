@@ -8,6 +8,7 @@ import 'package:kamusq/pages/add_page.dart';
 import 'package:kamusq/pages/detail_page.dart';
 import 'package:kamusq/pages/favorite_page.dart';
 import 'package:kamusq/pages/profile_page.dart';
+import 'package:kamusq/pages/setting_page.dart';
 import 'package:kamusq/pages/update_page.dart';
 import 'package:kamusq/theme.dart';
 
@@ -45,69 +46,63 @@ class _MainPageState extends State<MainPage> {
           child: SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Stack(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      IconButton(
-                        onPressed: () =>
-                            _scaffoldKey.currentState!.openDrawer(),
-                        icon: Icon(
-                          Icons.menu,
-                          color: Colors.white,
+                  IconButton(
+                    onPressed: () => _scaffoldKey.currentState!.openDrawer(),
+                    icon: Icon(
+                      Icons.menu,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Hello, \n${(widget.user.displayName != null && widget.user.displayName != '') ? widget.user.displayName : "Learners"}',
+                          style: whiteTextStyle.copyWith(
+                              fontSize: 25, fontWeight: medium),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Hello, \n${(widget.user.displayName != null && widget.user.displayName != '') ? widget.user.displayName : "Learners"}',
-                              style: whiteTextStyle.copyWith(
-                                  fontSize: 25, fontWeight: medium),
-                            ),
-                            Spacer(),
-                            CircleAvatar(
-                              radius: 50,
-                              backgroundColor: yellow,
-                              child: CircleAvatar(
-                                  radius: 45,
-                                  backgroundImage:
-                                      AssetImage("assets/profile.png")),
-                            )
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                        child: TextFormField(
-                          onChanged: (value) {
-                            setState(() {
-                              searchKey = value.toUpperCase();
-                            });
-                          },
-                          decoration: InputDecoration(
-                              fillColor: inputColor,
-                              filled: true,
-                              hintText: 'find your vocab',
-                              prefixIcon:
-                                  Icon(Icons.search, color: blue, size: 32),
-                              hintStyle: TextStyle(color: hintColor),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(color: grey)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(color: blue))),
-                        ),
-                      ),
-                    ],
-                  )
+                        Spacer(),
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundColor: yellow,
+                          child: CircleAvatar(
+                              radius: 45,
+                              backgroundImage:
+                                  AssetImage("assets/profile.png")),
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: TextFormField(
+                      onChanged: (value) {
+                        setState(() {
+                          searchKey = value.toUpperCase();
+                        });
+                      },
+                      decoration: InputDecoration(
+                          fillColor: inputColor,
+                          filled: true,
+                          hintText: 'find your vocab',
+                          prefixIcon: Icon(Icons.search, color: blue, size: 32),
+                          hintStyle: TextStyle(color: hintColor),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: grey)),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: blue))),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -174,7 +169,10 @@ class _MainPageState extends State<MainPage> {
               leading: Icon(Icons.settings),
               minLeadingWidth: 10,
               onTap: () {
-                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => SettingPage(user: widget.user)));
               },
             ),
             ListTile(
@@ -322,10 +320,10 @@ class _MainPageState extends State<MainPage> {
                                 },
                                 icon: Icon(
                                   (myFavorite != false)
-                                      ? Icons.favorite
-                                      : Icons.favorite_border,
+                                      ? Icons.bookmark
+                                      : Icons.bookmark_add_outlined,
                                   size: 35,
-                                  color: Colors.red,
+                                  color: Colors.amber,
                                 ),
                               )
                             ],

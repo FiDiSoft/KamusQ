@@ -19,8 +19,68 @@ class FavoritePage extends StatefulWidget {
 class _FavoritePageState extends State<FavoritePage> {
   @override
   Widget build(BuildContext context) {
+    Size _mediaQuery = MediaQuery.of(context).size;
+
     return Scaffold(
-      appBar: AppBar(),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(320),
+        child: Container(
+          height: 320.0,
+          width: _mediaQuery.width,
+          decoration: new BoxDecoration(
+            color: blue,
+            boxShadow: [new BoxShadow(blurRadius: 10.0)],
+            borderRadius: new BorderRadius.vertical(
+              bottom: Radius.circular(30),
+            ),
+          ),
+          child: SafeArea(
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+              child: Stack(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      InkWell(
+                        onTap: () => Navigator.pop(context),
+                        child: Container(
+                          padding: const EdgeInsets.all(10.0),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          child: Icon(
+                            Icons.arrow_back_ios_new_sharp,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.bookmark,
+                            size: 150,
+                            color: Colors.white,
+                          ),
+                          Text(
+                            'Favorite Vocab',
+                            style: whiteTextStyle.copyWith(fontSize: 30),
+                          ),
+                        ]),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
       body: StreamBuilder<QuerySnapshot>(
         stream: VocabServices.firebaseFirestore
             .collection('userId${widget.user.uid}')
@@ -131,10 +191,10 @@ class _FavoritePageState extends State<FavoritePage> {
                                 },
                                 icon: Icon(
                                   (myFavorite != false)
-                                      ? Icons.favorite
-                                      : Icons.favorite_border,
+                                      ? Icons.bookmark
+                                      : Icons.bookmark_add_outlined,
                                   size: 35,
-                                  color: Colors.red,
+                                  color: Colors.amber,
                                 ),
                               )
                             ],
