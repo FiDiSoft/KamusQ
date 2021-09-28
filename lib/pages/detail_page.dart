@@ -48,6 +48,7 @@ class _DetailPageState extends State<DetailPage> {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       InkWell(
                         onTap: () => Navigator.pop(context),
@@ -63,8 +64,8 @@ class _DetailPageState extends State<DetailPage> {
                           ),
                         ),
                       ),
-                      IconButton(
-                        onPressed: () {
+                      InkWell(
+                        onTap: () {
                           setState(() {
                             myFavorite = !myFavorite;
                           });
@@ -78,14 +79,14 @@ class _DetailPageState extends State<DetailPage> {
                             favorite: myFavorite,
                           );
                         },
-                        icon: Icon(
+                        child: Icon(
                           (myFavorite != false)
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          size: 35,
-                          color: Colors.red,
+                              ? Icons.bookmark
+                              : Icons.bookmark_add_outlined,
+                          size: 50,
+                          color: Colors.amber,
                         ),
-                      )
+                      ),
                     ],
                   ),
                   Align(

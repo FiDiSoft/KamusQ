@@ -37,6 +37,8 @@ class AuthServices {
 
       await user.reload();
 
+      user = auth.currentUser;
+
       //TODO:  remove the comment if need verif email
       // if (user != null && !user.emailVerified) {
       //   await user.sendEmailVerification();

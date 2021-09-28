@@ -49,13 +49,14 @@ class _RegisterPageState extends State<RegisterPage> {
                     height: 30,
                   ),
                   InkWell(
-                    onTap: () {},
+                    onTap: () async {},
                     child: Center(
-                        child: Image.asset(
-                      'assets/upload.png',
-                      height: 100,
-                      width: 100,
-                    )),
+                      child: Image.asset(
+                        'assets/upload.png',
+                        height: 100,
+                        width: 100,
+                      ),
+                    ),
                   ),
                   SizedBox(
                     height: 50,
@@ -70,11 +71,16 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   TextFormField(
                     controller: usernameController,
+                    validator: (username) => Validators.validateUsername(
+                        username: username.toString()),
                     decoration: InputDecoration(
                         fillColor: inputColor,
                         filled: true,
                         hintText: 'type your username...',
                         hintStyle: TextStyle(color: hintColor),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
                         enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                             borderSide: BorderSide(color: grey)),
@@ -161,6 +167,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                         usernameController.text.substring(1),
                                 email: emailController.text,
                                 password: passwordController.text);
+
+                            await FirebaseAuth.instance.currentUser!
+                                .updateDisplayName(usernameController.text);
                           }
 
                           if (FirebaseAuth.instance.currentUser != null) {

@@ -169,10 +169,36 @@ class _MainPageState extends State<MainPage> {
               leading: Icon(Icons.settings),
               minLeadingWidth: 10,
               onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => SettingPage(user: widget.user)));
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('Profile Setting'),
+                      content: Text(
+                          'This is important information, please be careful when updating'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context, "Cancel");
+                          },
+                          child: Text("No"),
+                        ),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      SettingPage(user: widget.user),
+                                ),
+                              );
+                            },
+                            child: Text("Next",
+                                style: TextStyle(color: Colors.red))),
+                      ],
+                    );
+                  },
+                );
               },
             ),
             ListTile(

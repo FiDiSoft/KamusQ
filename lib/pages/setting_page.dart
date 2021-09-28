@@ -167,7 +167,7 @@ class _SettingPageState extends State<SettingPage> {
                   height: 30,
                 ),
                 Text(
-                  'Password',
+                  'New Password',
                   style: blueTextStyle.copyWith(
                       fontWeight: semiBold, fontSize: 20),
                 ),
@@ -183,7 +183,7 @@ class _SettingPageState extends State<SettingPage> {
                       fillColor: inputColor,
                       filled: true,
                       focusColor: blue,
-                      hintText: 'type your password...',
+                      hintText: 'type new password carefully...',
                       hintStyle: TextStyle(color: hintColor),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20.0),
@@ -204,15 +204,18 @@ class _SettingPageState extends State<SettingPage> {
                     height: 60,
                     child: TextButton(
                       onPressed: () async {
-                        // String getUsername = usernameController.text[0]
-                        //         .toString()
-                        //         .toUpperCase() +
-                        //     usernameController.text.toString().substring(1);
+                        if (_formKey.currentState!.validate()) {
+                          String getUsername = usernameController.text[0]
+                                  .toString()
+                                  .toUpperCase() +
+                              usernameController.text.toString().substring(1);
+                          String getPassword = passwordController.text;
 
-                        // await widget.user.updatePhotoURL(upload);
-                        // await widget.user.updateDisplayName(getUsername);
+                          await widget.user.updateDisplayName(getUsername);
+                          await widget.user.updatePassword(getPassword);
 
-                        // Navigator.pop(context);
+                          Navigator.pop(context);
+                        }
                       },
                       style: TextButton.styleFrom(
                           backgroundColor: blue,
