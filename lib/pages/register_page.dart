@@ -191,19 +191,36 @@ class _RegisterPageState extends State<RegisterPage> {
                             String getEmail = emailController.text;
                             String getPassword = passwordController.text;
 
-                            await AuthServices.register(
-                              email: getEmail,
-                              password: getPassword,
-                            );
+                            if (imageFile != null) {
+                              await AuthServices.register(
+                                email: getEmail,
+                                password: getPassword,
+                              );
 
-                            await FirebaseAuth.instance.currentUser!
-                                .updateDisplayName(getUsername);
+                              await FirebaseAuth.instance.currentUser!
+                                  .updateDisplayName(getUsername);
 
-                            PhotoUrlServices.updateUrl(imagePath, imageFile);
-                          }
+                              PhotoUrlServices.updateUrl(imagePath, imageFile);
 
-                          if (FirebaseAuth.instance.currentUser != null) {
-                            Navigator.pop(context);
+                              if (FirebaseAuth.instance.currentUser != null) {
+                                Navigator.pop(context);
+                              }
+                            } else {
+                              final snackBar = SnackBar(
+                                backgroundColor: Colors.red,
+                                padding: const EdgeInsets.all(20),
+                                content: const Text(
+                                  'Please fill out the form!',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                duration: Duration(seconds: 2),
+                              );
+
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            }
                           }
                         },
                         style: TextButton.styleFrom(
