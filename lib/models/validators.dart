@@ -43,6 +43,32 @@ class Validators {
     return null;
   }
 
+  static String? validateNewPassword({required String password}) {
+    // ignore: unnecessary_null_comparison
+    if (password == null) {
+      return null;
+    }
+
+    if (password.length < 6) {
+      return 'Enter a password of more than 6 letters';
+    }
+
+    return null;
+  }
+
+  static String? validateConfirmNewPassword({required String password}) {
+    // ignore: unnecessary_null_comparison
+    if (password == null) {
+      return null;
+    }
+
+    if (password.length < 6) {
+      return 'Enter a password of more than 6 letters';
+    }
+
+    return null;
+  }
+
   static String? validateVocab({required String vocab}) {
     // ignore: unnecessary_null_comparison
     if (vocab == null) {
