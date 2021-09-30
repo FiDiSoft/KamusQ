@@ -33,6 +33,7 @@ class _AddPageState extends State<AddPage> {
   @override
   Widget build(BuildContext context) {
     Size _mediaQuery = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(320),
@@ -225,12 +226,12 @@ class _AddPageState extends State<AddPage> {
                           );
 
                           final snackBar = SnackBar(
-                            backgroundColor: blue,
+                            backgroundColor: Colors.green,
                             padding: const EdgeInsets.all(20),
                             content: const Text(
-                              'Successfully added word!',
+                              'Word has been added!',
                               style: TextStyle(
-                                  color: Colors.green,
+                                  color: Colors.white,
                                   fontWeight: FontWeight.bold),
                             ),
                             duration: Duration(seconds: 2),
@@ -241,12 +242,12 @@ class _AddPageState extends State<AddPage> {
                           Navigator.pop(context);
                         } else {
                           final snackBar = SnackBar(
-                            backgroundColor: blue,
+                            backgroundColor: Colors.red,
                             padding: const EdgeInsets.all(20),
                             content: const Text(
                               'Please fill out the form!',
                               style: TextStyle(
-                                  color: Colors.red,
+                                  color: Colors.white,
                                   fontWeight: FontWeight.bold),
                             ),
                             duration: Duration(seconds: 2),

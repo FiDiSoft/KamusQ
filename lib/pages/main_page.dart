@@ -32,9 +32,9 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(290),
+        preferredSize: Size.fromHeight(300),
         child: Container(
-          height: 290.0,
+          height: 300.0,
           width: _mediaQuery.width,
           decoration: new BoxDecoration(
             color: blue,
@@ -69,26 +69,23 @@ class _MainPageState extends State<MainPage> {
                               fontSize: 25, fontWeight: medium),
                         ),
                         Spacer(),
-                        InkWell(
-                          onTap: () async {},
-                          child: CircleAvatar(
-                            maxRadius: 50,
-                            backgroundColor: Colors.amber,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(50.0),
-                              child: (widget.user.photoURL != null)
-                                  ? Image.network(
-                                      widget.user.photoURL.toString(),
-                                      height: 90,
-                                      width: 90,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Image.asset(
-                                      'assets/profile.png',
-                                      height: 90,
-                                      width: 90,
-                                    ),
-                            ),
+                        CircleAvatar(
+                          maxRadius: 50,
+                          backgroundColor: Colors.amber,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50.0),
+                            child: (widget.user.photoURL != null)
+                                ? Image.network(
+                                    widget.user.photoURL.toString(),
+                                    height: 90,
+                                    width: 90,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.asset(
+                                    'assets/profile.png',
+                                    height: 90,
+                                    width: 90,
+                                  ),
                           ),
                         ),
                       ],
@@ -179,7 +176,7 @@ class _MainPageState extends State<MainPage> {
               },
             ),
             ListTile(
-              title: const Text('Setting'),
+              title: const Text('Account Setting'),
               leading: Icon(Icons.settings),
               minLeadingWidth: 10,
               onTap: () {
@@ -187,7 +184,7 @@ class _MainPageState extends State<MainPage> {
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      title: Text('Profile Setting'),
+                      title: Text('Account Setting'),
                       content: Text(
                           'This is important information, please be careful when updating'),
                       actions: [
@@ -195,7 +192,7 @@ class _MainPageState extends State<MainPage> {
                           onPressed: () {
                             Navigator.pop(context, "Cancel");
                           },
-                          child: Text("No"),
+                          child: Text("Cancel"),
                         ),
                         TextButton(
                             onPressed: () {
@@ -208,7 +205,7 @@ class _MainPageState extends State<MainPage> {
                               );
                             },
                             child: Text("Next",
-                                style: TextStyle(color: Colors.red))),
+                                style: TextStyle(color: Colors.red[900]))),
                       ],
                     );
                   },
@@ -257,7 +254,7 @@ class _MainPageState extends State<MainPage> {
                 .snapshots(),
         builder: (context, vocabSnapshot) {
           if (vocabSnapshot.hasError) {
-            return Text('Something went wrong');
+            return Center(child: Text('Something went wrong'));
           }
 
           if (vocabSnapshot.connectionState == ConnectionState.waiting) {
@@ -269,7 +266,7 @@ class _MainPageState extends State<MainPage> {
               DocumentSnapshot _vocabsDocument = vocabSnapshot.data!.docs[i];
               Map<String, dynamic> _mapVocab =
                   _vocabsDocument.data() as Map<String, dynamic>;
-              // bool myFavorite = _mapVocab['favorite'];
+              bool myFavorite = _mapVocab['favorite'];
 
               return Container(
                 margin:
@@ -312,6 +309,21 @@ class _MainPageState extends State<MainPage> {
                           onTap: () {
                             VocabServices.deleteVocab(
                                 _vocabsDocument.reference);
+
+                            final snackBar = SnackBar(
+                              backgroundColor: Colors.red,
+                              padding: const EdgeInsets.all(20),
+                              content: const Text(
+                                'Item has been deleted!',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              duration: Duration(seconds: 2),
+                            );
+
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
                           },
                           icon: Icons.delete,
                           color: Colors.red,
@@ -325,17 +337,72 @@ class _MainPageState extends State<MainPage> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20.0, vertical: 20.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                "${_mapVocab['vocab']}",
-                                style: whiteTextStyle.copyWith(fontSize: 20),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "${_mapVocab['vocab']}",
+                                    style:
+                                        whiteTextStyle.copyWith(fontSize: 20),
+                                  ),
+                                  Text(
+                                    "${_mapVocab['meaning']}",
+                                    style: whiteTextStyle.copyWith(
+                                        fontSize: 15, color: Colors.grey),
+                                  ),
+                                ],
                               ),
-                              Text(
-                                "${_mapVocab['meaning']}",
-                                style: whiteTextStyle.copyWith(
-                                    fontSize: 15, color: Colors.grey),
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    myFavorite = !myFavorite;
+                                  });
+
+                                  VocabServices.addFavorite(
+                                      _vocabsDocument.reference, myFavorite);
+
+                                  if (myFavorite == true) {
+                                    final snackBar = SnackBar(
+                                      backgroundColor: Colors.green,
+                                      padding: const EdgeInsets.all(20),
+                                      content: const Text(
+                                        'Item added to My Favorite!',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      duration: Duration(seconds: 2),
+                                    );
+
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  } else {
+                                    final snackBar = SnackBar(
+                                      backgroundColor: Colors.red,
+                                      padding: const EdgeInsets.all(20),
+                                      content: const Text(
+                                        'Item removed from My Favorite!',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      duration: Duration(seconds: 2),
+                                    );
+
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  }
+                                },
+                                child: Icon(
+                                  (myFavorite != false)
+                                      ? Icons.bookmark
+                                      : Icons.bookmark_add_outlined,
+                                  size: 40,
+                                  color: Colors.amber,
+                                ),
                               ),
                             ],
                           ),
