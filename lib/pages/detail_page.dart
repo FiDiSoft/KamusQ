@@ -1,13 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:kamusq/models/vocab_services.dart';
 import 'package:kamusq/theme.dart';
 
-class DetailPage extends StatelessWidget {
+class DetailPage extends StatefulWidget {
   const DetailPage({Key? key, required this.mapVocab, required this.vocabRef})
       : super(key: key);
 
   final DocumentReference vocabRef;
   final Map<String, dynamic> mapVocab;
+
+  @override
+  State<DetailPage> createState() => _DetailPageState();
+}
+
+class _DetailPageState extends State<DetailPage> {
+  var myFavorite;
+
+  @override
+  void initState() {
+    myFavorite = widget.mapVocab['favorite'];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +48,7 @@ class DetailPage extends StatelessWidget {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       InkWell(
                         onTap: () => Navigator.pop(context),
@@ -49,14 +64,29 @@ class DetailPage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.favorite,
-                          size: 35,
-                          color: Colors.red,
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            myFavorite = !myFavorite;
+                          });
+
+                          VocabServices.updateVocab(
+                            vocab: widget.mapVocab['vocab'],
+                            meaning: widget.mapVocab['meaning'],
+                            desc: widget.mapVocab['desc'],
+                            docRef: widget.vocabRef,
+                            keywords: widget.mapVocab['keywords'],
+                            favorite: myFavorite,
+                          );
+                        },
+                        child: Icon(
+                          (myFavorite != false)
+                              ? Icons.bookmark
+                              : Icons.bookmark_add_outlined,
+                          size: 50,
+                          color: Colors.amber,
                         ),
-                      )
+                      ),
                     ],
                   ),
                   Align(
@@ -65,11 +95,11 @@ class DetailPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            '${mapVocab['vocab']}',
+                            '${widget.mapVocab['vocab']}',
                             style: whiteTextStyle.copyWith(fontSize: 40),
                           ),
                           Text(
-                            '${mapVocab['meaning']}',
+                            '${widget.mapVocab['meaning']}',
                             style: yellowTextStyle.copyWith(fontSize: 30),
                           ),
                         ]),
@@ -93,7 +123,7 @@ class DetailPage extends StatelessWidget {
                 style: blackTextStyle.copyWith(fontSize: 20),
               ),
               Text(
-                'Lorem ipsum dolor sit amet, quodsi incorrupte et mei, iudicabit appellantur at sea. Id modus iusto corpora has. Dolores necessitatibus vim te, nam in modo alienum. An simul iriure convenire qui, et numquam reprehendunt has. Eos ad adhuc nemore, qui etiam novum facete no.',
+                '${widget.mapVocab['desc']}',
                 style: blueTextStyle,
               ),
             ],

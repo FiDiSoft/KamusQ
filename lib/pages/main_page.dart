@@ -6,7 +6,9 @@ import 'package:kamusq/models/auth_services.dart';
 import 'package:kamusq/models/vocab_services.dart';
 import 'package:kamusq/pages/add_page.dart';
 import 'package:kamusq/pages/detail_page.dart';
+import 'package:kamusq/pages/favorite_page.dart';
 import 'package:kamusq/pages/profile_page.dart';
+import 'package:kamusq/pages/setting_page.dart';
 import 'package:kamusq/pages/update_page.dart';
 import 'package:kamusq/theme.dart';
 
@@ -44,69 +46,77 @@ class _MainPageState extends State<MainPage> {
           child: SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Stack(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      IconButton(
-                        onPressed: () =>
-                            _scaffoldKey.currentState!.openDrawer(),
-                        icon: Icon(
-                          Icons.menu,
-                          color: Colors.white,
+                  IconButton(
+                    onPressed: () => _scaffoldKey.currentState!.openDrawer(),
+                    icon: Icon(
+                      Icons.menu,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Hello, \n${(widget.user.displayName != null && widget.user.displayName != '') ? widget.user.displayName : "Learners"}',
+                          style: whiteTextStyle.copyWith(
+                              fontSize: 25, fontWeight: medium),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Hello, \n${(widget.user.displayName != null && widget.user.displayName != '') ? widget.user.displayName : "Learners"}',
-                              style: whiteTextStyle.copyWith(
-                                  fontSize: 25, fontWeight: medium),
+                        Spacer(),
+                        InkWell(
+                          onTap: () async {},
+                          child: CircleAvatar(
+                            maxRadius: 50,
+                            backgroundColor: Colors.amber,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50.0),
+                              child: (widget.user.photoURL != null)
+                                  ? Image.network(
+                                      widget.user.photoURL.toString(),
+                                      height: 90,
+                                      width: 90,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.asset(
+                                      'assets/profile.png',
+                                      height: 90,
+                                      width: 90,
+                                    ),
                             ),
-                            Spacer(),
-                            CircleAvatar(
-                              radius: 50,
-                              backgroundColor: yellow,
-                              child: CircleAvatar(
-                                  radius: 45,
-                                  backgroundImage:
-                                      AssetImage("assets/profile.png")),
-                            )
-                          ],
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                        child: TextFormField(
-                          onChanged: (value) {
-                            setState(() {
-                              searchKey = value.toUpperCase();
-                            });
-                          },
-                          decoration: InputDecoration(
-                              fillColor: inputColor,
-                              filled: true,
-                              hintText: 'find your vocab',
-                              prefixIcon:
-                                  Icon(Icons.search, color: blue, size: 32),
-                              hintStyle: TextStyle(color: hintColor),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(color: grey)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(color: blue))),
-                        ),
-                      ),
-                    ],
-                  )
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: TextFormField(
+                      onChanged: (value) {
+                        setState(() {
+                          searchKey = value.toUpperCase();
+                        });
+                      },
+                      decoration: InputDecoration(
+                          fillColor: inputColor,
+                          filled: true,
+                          hintText: 'find your vocab',
+                          prefixIcon: Icon(Icons.search, color: blue, size: 32),
+                          hintStyle: TextStyle(color: hintColor),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: grey)),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: blue))),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -158,11 +168,51 @@ class _MainPageState extends State<MainPage> {
               },
             ),
             ListTile(
+              title: const Text('My Favorite'),
+              leading: Icon(Icons.bookmark),
+              minLeadingWidth: 10,
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => FavoritePage(user: widget.user)));
+              },
+            ),
+            ListTile(
               title: const Text('Setting'),
               leading: Icon(Icons.settings),
               minLeadingWidth: 10,
               onTap: () {
-                Navigator.pop(context);
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('Profile Setting'),
+                      content: Text(
+                          'This is important information, please be careful when updating'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context, "Cancel");
+                          },
+                          child: Text("No"),
+                        ),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      SettingPage(user: widget.user),
+                                ),
+                              );
+                            },
+                            child: Text("Next",
+                                style: TextStyle(color: Colors.red))),
+                      ],
+                    );
+                  },
+                );
               },
             ),
             ListTile(
@@ -219,6 +269,7 @@ class _MainPageState extends State<MainPage> {
               DocumentSnapshot _vocabsDocument = vocabSnapshot.data!.docs[i];
               Map<String, dynamic> _mapVocab =
                   _vocabsDocument.data() as Map<String, dynamic>;
+              // bool myFavorite = _mapVocab['favorite'];
 
               return Container(
                 margin:

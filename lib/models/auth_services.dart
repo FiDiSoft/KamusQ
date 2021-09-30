@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthServices {
@@ -22,7 +24,7 @@ class AuthServices {
   }
 
   static Future<User?> register(
-      {required String username,
+      {
       required String email,
       required String password}) async {
     try {
@@ -30,7 +32,9 @@ class AuthServices {
           email: email, password: password);
       User? user = userCredential.user;
 
-      await user!.updateDisplayName(username);
+      await user!.reload();
+
+      user = auth.currentUser;
 
       //TODO:  remove the comment if need verif email
       // if (user != null && !user.emailVerified) {
