@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kamusq/theme.dart';
 
@@ -81,18 +82,31 @@ class _ProfilePageState extends State<ProfilePage> {
                   InkWell(
                     onTap: () async {},
                     child: CircleAvatar(
-                      maxRadius: 50,
+                      maxRadius: 55,
+                      backgroundColor: Colors.amber,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(50.0),
-                        child: Image.asset(
-                          'assets/upload.png',
-                          height: 100,
-                          width: 100,
-                        ),
+                        child: (widget.user.photoURL != null)
+                            ? Image.network(
+                                widget.user.photoURL.toString(),
+                                height: 100,
+                                width: 100,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.asset(
+                                'assets/upload.png',
+                                height: 100,
+                                width: 100,
+                              ),
                       ),
                     ),
                   ),
                   SizedBox(height: 5),
+                  Text(
+                    '${widget.user.displayName}',
+                    style: whiteTextStyle.copyWith(
+                        fontSize: 30, fontWeight: FontWeight.bold),
+                  )
                 ],
               ),
             ),
