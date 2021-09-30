@@ -24,7 +24,7 @@ class AuthServices {
   }
 
   static Future<User?> register(
-      {required String username,
+      {
       required String email,
       required String password}) async {
     try {
@@ -32,10 +32,7 @@ class AuthServices {
           email: email, password: password);
       User? user = userCredential.user;
 
-      await user!.updateDisplayName(username);
-      await user.updatePhotoURL('');
-
-      await user.reload();
+      await user!.reload();
 
       user = auth.currentUser;
 
