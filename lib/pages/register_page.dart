@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:kamusq/models/auth_services.dart';
+import 'package:kamusq/models/photoUrl_services.dart';
 import 'package:kamusq/models/validators.dart';
 import 'package:kamusq/pages/login_page.dart';
 import 'package:kamusq/theme.dart';
@@ -17,6 +21,18 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController emailController = TextEditingController(text: "");
   TextEditingController passwordController = TextEditingController(text: "");
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  var imageFile;
+  var imagePath;
+
+  Future pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      imageFile = File(pickedFile!.path);
+      imagePath = pickedFile.path;
+    });
+  }
 
   @override
   void dispose() {
@@ -49,13 +65,21 @@ class _RegisterPageState extends State<RegisterPage> {
                     height: 30,
                   ),
                   InkWell(
-                    onTap: () async {},
+                    onTap: () {
+                      pickImage();
+                    },
                     child: Center(
-                      child: Image.asset(
-                        'assets/upload.png',
-                        height: 100,
-                        width: 100,
-                      ),
+                      child: (imageFile != null)
+                          ? Image.file(
+                              imageFile,
+                              height: 100,
+                              width: 100,
+                            )
+                          : Image.asset(
+                              'assets/upload.png',
+                              height: 100,
+                              width: 100,
+                            ),
                     ),
                   ),
                   SizedBox(
@@ -161,15 +185,21 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: TextButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
+                            String getUsername =
+                                usernameController.text[0].toUpperCase() +
+                                    usernameController.text.substring(1);
+                            String getEmail = emailController.text;
+                            String getPassword = passwordController.text;
+
                             await AuthServices.register(
-                                username:
-                                    usernameController.text[0].toUpperCase() +
-                                        usernameController.text.substring(1),
-                                email: emailController.text,
-                                password: passwordController.text);
+                              email: getEmail,
+                              password: getPassword,
+                            );
 
                             await FirebaseAuth.instance.currentUser!
-                                .updateDisplayName(usernameController.text);
+                                .updateDisplayName(getUsername);
+
+                            PhotoUrlServices.updateUrl(imagePath, imageFile);
                           }
 
                           if (FirebaseAuth.instance.currentUser != null) {
