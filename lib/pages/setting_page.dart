@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:kamusq/models/photoUrl_services.dart';
 import 'package:kamusq/models/validators.dart';
+import 'package:kamusq/pages/main_page.dart';
 import 'package:kamusq/theme.dart';
 
 class SettingPage extends StatefulWidget {
@@ -16,7 +21,20 @@ class _SettingPageState extends State<SettingPage> {
   var usernameController;
   var emailController;
   var passwordController;
+  var confirmPasswordController;
+  var imageFile;
+  var imagePath;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  Future pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      imageFile = File(pickedFile!.path);
+      imagePath = pickedFile.path;
+    });
+  }
 
   @override
   void initState() {
@@ -24,6 +42,7 @@ class _SettingPageState extends State<SettingPage> {
         TextEditingController(text: "${widget.user.displayName}");
     emailController = TextEditingController(text: "${widget.user.email}");
     passwordController = TextEditingController(text: "");
+    confirmPasswordController = TextEditingController(text: '');
     super.initState();
   }
 
@@ -80,16 +99,44 @@ class _SettingPageState extends State<SettingPage> {
                   ),
                   SizedBox(height: 20),
                   InkWell(
-                    onTap: () async {},
+                    onTap: () {
+                      pickImage();
+                    },
                     child: CircleAvatar(
-                      maxRadius: 50,
+                      maxRadius: 55,
+                      backgroundColor: Colors.amber,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(50.0),
-                        child: Image.asset(
-                          'assets/upload.png',
-                          height: 100,
-                          width: 100,
-                        ),
+                        child: (widget.user.photoURL != null)
+                            ? (imageFile != null)
+                                ? Image.file(
+                                    imageFile,
+                                    height: 100,
+                                    width: 100,
+                                  )
+                                : Stack(
+                                    children: [
+                                      Image.network(
+                                        widget.user.photoURL.toString(),
+                                        height: 100,
+                                        width: 100,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      Opacity(
+                                        opacity: 0.6,
+                                        child: Image.asset(
+                                          'assets/upload.png',
+                                          height: 100,
+                                          width: 100,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                            : Image.asset(
+                                'assets/upload.png',
+                                height: 100,
+                                width: 100,
+                              ),
                       ),
                     ),
                   ),
@@ -119,6 +166,8 @@ class _SettingPageState extends State<SettingPage> {
                 ),
                 TextFormField(
                   controller: usernameController,
+                  validator: (username) => Validators.validateUsername(
+                      username: username.toString()),
                   decoration: InputDecoration(
                       fillColor: inputColor,
                       filled: true,
@@ -167,7 +216,7 @@ class _SettingPageState extends State<SettingPage> {
                   height: 30,
                 ),
                 Text(
-                  'New Password',
+                  'New Password (optional)',
                   style: blueTextStyle.copyWith(
                       fontWeight: semiBold, fontSize: 20),
                 ),
@@ -177,13 +226,46 @@ class _SettingPageState extends State<SettingPage> {
                 TextFormField(
                   controller: passwordController,
                   obscureText: true,
-                  validator: (password) => Validators.validatePassword(
-                      password: password.toString()),
+                  // validator: (password) => Validators.validateNewPassword(
+                  //     password: password.toString()),
                   decoration: InputDecoration(
                       fillColor: inputColor,
                       filled: true,
                       focusColor: blue,
                       hintText: 'type new password carefully...',
+                      hintStyle: TextStyle(color: hintColor),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: grey),
+                          borderRadius: BorderRadius.circular(20)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: blue),
+                          borderRadius: BorderRadius.circular(20))),
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Text(
+                  'Confirm New Password',
+                  style: blueTextStyle.copyWith(
+                      fontWeight: semiBold, fontSize: 20),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                TextFormField(
+                  controller: confirmPasswordController,
+                  obscureText: true,
+                  // validator: (password) =>
+                  //     Validators.validateConfirmNewPassword(
+                  //         password: password.toString()),
+                  decoration: InputDecoration(
+                      fillColor: inputColor,
+                      filled: true,
+                      focusColor: blue,
+                      hintText: 'type again new password',
                       hintStyle: TextStyle(color: hintColor),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20.0),
@@ -210,11 +292,39 @@ class _SettingPageState extends State<SettingPage> {
                                   .toUpperCase() +
                               usernameController.text.toString().substring(1);
                           String getPassword = passwordController.text;
+                          String getConfirmPassword =
+                              confirmPasswordController.text;
 
                           await widget.user.updateDisplayName(getUsername);
-                          await widget.user.updatePassword(getPassword);
 
-                          Navigator.pop(context);
+                          if (getPassword != '') {
+                            if (getPassword == getConfirmPassword) {
+                              await widget.user.updatePassword(getPassword);
+                            }
+                          }
+
+                          if (imagePath != null && imageFile != null) {
+                            PhotoUrlServices.updateUrl(imagePath, imageFile);
+                          }
+
+                          final snackBar = SnackBar(
+                            backgroundColor: blue,
+                            padding: const EdgeInsets.all(20),
+                            content: const Text(
+                              'Close and re-open the app to see the changes!',
+                              style: TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            duration: Duration(seconds: 2),
+                          );
+
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => MainPage(user: widget.user)));
                         }
                       },
                       style: TextButton.styleFrom(
