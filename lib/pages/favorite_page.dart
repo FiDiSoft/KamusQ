@@ -156,47 +156,18 @@ class _FavoritePageState extends State<FavoritePage> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20.0, vertical: 20.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "${_mapVocab['vocab']}",
-                                    style:
-                                        whiteTextStyle.copyWith(fontSize: 20),
-                                  ),
-                                  Text(
-                                    "${_mapVocab['meaning']}",
-                                    style: whiteTextStyle.copyWith(
-                                        fontSize: 15, color: Colors.grey),
-                                  ),
-                                ],
+                              Text(
+                                "${_mapVocab['vocab']}",
+                                style: whiteTextStyle.copyWith(fontSize: 20),
                               ),
-                              IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    myFavorite = !myFavorite;
-                                  });
-
-                                  VocabServices.updateVocab(
-                                    vocab: _mapVocab['vocab'],
-                                    meaning: _mapVocab['meaning'],
-                                    desc: _mapVocab['desc'],
-                                    docRef: _vocabsDocument.reference,
-                                    keywords: _mapVocab['keywords'],
-                                    favorite: myFavorite,
-                                  );
-                                },
-                                icon: Icon(
-                                  (myFavorite != false)
-                                      ? Icons.bookmark
-                                      : Icons.bookmark_add_outlined,
-                                  size: 35,
-                                  color: Colors.amber,
-                                ),
-                              )
+                              Text(
+                                "${_mapVocab['meaning']}",
+                                style: whiteTextStyle.copyWith(
+                                    fontSize: 15, color: Colors.grey),
+                              ),
                             ],
                           ),
                         ),
