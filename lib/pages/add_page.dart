@@ -204,9 +204,7 @@ class _AddPageState extends State<AddPage> {
                           String getMeaningText =
                               meaningController.text[0].toUpperCase() +
                                   meaningController.text.substring(1);
-                          String getDescText =
-                              descController.text[0].toUpperCase() +
-                                  descController.text.substring(1);
+                          String getDescText = descController.text;
 
                           List<String> keywords = [];
                           String searchKey = "";
@@ -225,6 +223,20 @@ class _AddPageState extends State<AddPage> {
                             uid: widget.uid,
                             keywords: keywords,
                           );
+
+                          final snackBar = SnackBar(
+                            backgroundColor: blue,
+                            padding: const EdgeInsets.all(20),
+                            content: const Text(
+                              'Successfully added word!',
+                              style: TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            duration: Duration(seconds: 2),
+                          );
+
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
                           Navigator.pop(context);
                         } else {
