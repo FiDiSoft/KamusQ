@@ -70,14 +70,8 @@ class _DetailPageState extends State<DetailPage> {
                             myFavorite = !myFavorite;
                           });
 
-                          VocabServices.updateVocab(
-                            vocab: widget.mapVocab['vocab'],
-                            meaning: widget.mapVocab['meaning'],
-                            desc: widget.mapVocab['desc'],
-                            docRef: widget.vocabRef,
-                            keywords: widget.mapVocab['keywords'],
-                            favorite: myFavorite,
-                          );
+                          VocabServices.addFavorite(
+                              widget.vocabRef, myFavorite);
                         },
                         child: Icon(
                           (myFavorite != false)

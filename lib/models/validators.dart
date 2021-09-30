@@ -49,20 +49,9 @@ class Validators {
       return null;
     }
 
-    if (password.length < 6) {
-      return 'Enter a password of more than 6 letters';
-    }
-
-    return null;
-  }
-
-  static String? validateConfirmNewPassword({required String password}) {
-    // ignore: unnecessary_null_comparison
-    if (password == null) {
-      return null;
-    }
-
-    if (password.length < 6) {
+    if (password.isEmpty) {
+      return 'Password cannot be empty!';
+    } else if (password.length < 6) {
       return 'Enter a password of more than 6 letters';
     }
 

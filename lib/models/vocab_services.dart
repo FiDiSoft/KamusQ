@@ -65,4 +65,14 @@ class VocabServices {
       (transaction) async => transaction.delete(docRef),
     );
   }
+
+  static Future<Transaction> addFavorite(
+      DocumentReference docRef, bool myFavorite) async {
+    return await firebaseFirestore.runTransaction(
+      (transaction) async => transaction.update(docRef, {
+        'favorite': myFavorite,
+        'timestamp': FieldValue.serverTimestamp(),
+      }),
+    );
+  }
 }

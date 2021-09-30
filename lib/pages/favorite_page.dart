@@ -143,6 +143,21 @@ class _FavoritePageState extends State<FavoritePage> {
                           onTap: () {
                             VocabServices.deleteVocab(
                                 _vocabsDocument.reference);
+
+                            final snackBar = SnackBar(
+                              backgroundColor: Colors.red,
+                              padding: const EdgeInsets.all(20),
+                              content: const Text(
+                                'Item has been deleted!',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              duration: Duration(seconds: 2),
+                            );
+
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
                           },
                           icon: Icons.delete,
                           color: Colors.red,
@@ -156,17 +171,72 @@ class _FavoritePageState extends State<FavoritePage> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20.0, vertical: 20.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                "${_mapVocab['vocab']}",
-                                style: whiteTextStyle.copyWith(fontSize: 20),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "${_mapVocab['vocab']}",
+                                    style:
+                                        whiteTextStyle.copyWith(fontSize: 20),
+                                  ),
+                                  Text(
+                                    "${_mapVocab['meaning']}",
+                                    style: whiteTextStyle.copyWith(
+                                        fontSize: 15, color: Colors.grey),
+                                  ),
+                                ],
                               ),
-                              Text(
-                                "${_mapVocab['meaning']}",
-                                style: whiteTextStyle.copyWith(
-                                    fontSize: 15, color: Colors.grey),
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    myFavorite = !myFavorite;
+                                  });
+
+                                  VocabServices.addFavorite(
+                                      _vocabsDocument.reference, myFavorite);
+
+                                  if (myFavorite == true) {
+                                    final snackBar = SnackBar(
+                                      backgroundColor: Colors.green,
+                                      padding: const EdgeInsets.all(20),
+                                      content: const Text(
+                                        'Item added to My Favorite!',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      duration: Duration(seconds: 2),
+                                    );
+
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  } else {
+                                    final snackBar = SnackBar(
+                                      backgroundColor: Colors.red,
+                                      padding: const EdgeInsets.all(20),
+                                      content: const Text(
+                                        'Item removed from My Favorite!',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      duration: Duration(seconds: 2),
+                                    );
+
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  }
+                                },
+                                child: Icon(
+                                  (myFavorite != false)
+                                      ? Icons.bookmark
+                                      : Icons.bookmark_add_outlined,
+                                  size: 40,
+                                  color: Colors.amber,
+                                ),
                               ),
                             ],
                           ),

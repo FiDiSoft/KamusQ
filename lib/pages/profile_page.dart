@@ -38,9 +38,9 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(290),
+        preferredSize: Size.fromHeight(300),
         child: Container(
-          height: 290,
+          height: 300,
           width: MediaQuery.of(context).size.height,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.vertical(bottom: Radius.circular(30.0)),
@@ -79,33 +79,30 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   ),
                   SizedBox(height: 20),
-                  InkWell(
-                    onTap: () async {},
-                    child: CircleAvatar(
-                      maxRadius: 55,
-                      backgroundColor: Colors.amber,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(50.0),
-                        child: (widget.user.photoURL != null)
-                            ? Image.network(
-                                widget.user.photoURL.toString(),
-                                height: 100,
-                                width: 100,
-                                fit: BoxFit.cover,
-                              )
-                            : Image.asset(
-                                'assets/upload.png',
-                                height: 100,
-                                width: 100,
-                              ),
-                      ),
+                  CircleAvatar(
+                    maxRadius: 55,
+                    backgroundColor: Colors.amber,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(50.0),
+                      child: (widget.user.photoURL != null)
+                          ? Image.network(
+                              widget.user.photoURL.toString(),
+                              height: 100,
+                              width: 100,
+                              fit: BoxFit.cover,
+                            )
+                          : Image.asset(
+                              'assets/upload.png',
+                              height: 100,
+                              width: 100,
+                            ),
                     ),
                   ),
                   SizedBox(height: 5),
                   Text(
                     '${widget.user.displayName}',
                     style: whiteTextStyle.copyWith(
-                        fontSize: 30, fontWeight: FontWeight.bold),
+                        fontSize: 25, fontWeight: FontWeight.bold),
                   )
                 ],
               ),

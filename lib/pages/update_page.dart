@@ -95,7 +95,7 @@ class _UpdatePageState extends State<UpdatePage> {
                             color: Colors.white,
                           ),
                           Text(
-                            'Add Vocab',
+                            'Update Vocab',
                             style: whiteTextStyle.copyWith(fontSize: 40),
                           ),
                         ]),
@@ -217,9 +217,7 @@ class _UpdatePageState extends State<UpdatePage> {
                           String getMeaningText =
                               meaningController.text[0].toUpperCase() +
                                   meaningController.text.substring(1);
-                          String getDescText =
-                              descController.text[0].toUpperCase() +
-                                  descController.text.substring(1);
+                          String getDescText = descController.text;
 
                           List<String> keywords = [];
                           String searchKey = "";
@@ -240,14 +238,28 @@ class _UpdatePageState extends State<UpdatePage> {
                             favorite: favorite,
                           );
 
+                          final snackBar = SnackBar(
+                            backgroundColor: Colors.green,
+                            padding: const EdgeInsets.all(20),
+                            content: const Text(
+                              'Word has been updated!',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            duration: Duration(seconds: 2),
+                          );
+
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
                           Navigator.pop(context);
                         } else {
                           final snackBar = SnackBar(
-                            backgroundColor: blue,
+                            backgroundColor: Colors.red,
                             content: const Text(
                               'Please fill out the form!',
                               style: TextStyle(
-                                  color: Colors.red,
+                                  color: Colors.white,
                                   fontWeight: FontWeight.bold),
                             ),
                             duration: Duration(seconds: 2),
