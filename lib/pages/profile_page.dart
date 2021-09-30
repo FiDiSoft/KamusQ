@@ -21,8 +21,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
-    usernameController =
-        TextEditingController(text: "${widget.user.displayName}");
+    usernameController = TextEditingController(
+        text: (widget.user.displayName != null)
+            ? widget.user.displayName.toString()
+            : '');
     emailController = TextEditingController(text: "${widget.user.email}");
     super.initState();
   }
@@ -100,7 +102,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   SizedBox(height: 5),
                   Text(
-                    '${widget.user.displayName}',
+                    (widget.user.displayName != null)
+                        ? widget.user.displayName.toString()
+                        : '',
                     style: whiteTextStyle.copyWith(
                         fontSize: 25, fontWeight: FontWeight.bold),
                   )
