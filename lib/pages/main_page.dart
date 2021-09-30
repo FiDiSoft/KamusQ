@@ -69,14 +69,28 @@ class _MainPageState extends State<MainPage> {
                               fontSize: 25, fontWeight: medium),
                         ),
                         Spacer(),
-                        CircleAvatar(
-                          radius: 50,
-                          backgroundColor: yellow,
+                        InkWell(
+                          onTap: () async {},
                           child: CircleAvatar(
-                              radius: 45,
-                              backgroundImage:
-                                  AssetImage("assets/profile.png")),
-                        )
+                            maxRadius: 50,
+                            backgroundColor: Colors.amber,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50.0),
+                              child: (widget.user.photoURL != null)
+                                  ? Image.network(
+                                      widget.user.photoURL.toString(),
+                                      height: 90,
+                                      width: 90,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.asset(
+                                      'assets/profile.png',
+                                      height: 90,
+                                      width: 90,
+                                    ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -155,7 +169,7 @@ class _MainPageState extends State<MainPage> {
             ),
             ListTile(
               title: const Text('My Favorite'),
-              leading: Icon(Icons.favorite),
+              leading: Icon(Icons.bookmark),
               minLeadingWidth: 10,
               onTap: () {
                 Navigator.push(
@@ -255,7 +269,7 @@ class _MainPageState extends State<MainPage> {
               DocumentSnapshot _vocabsDocument = vocabSnapshot.data!.docs[i];
               Map<String, dynamic> _mapVocab =
                   _vocabsDocument.data() as Map<String, dynamic>;
-              bool myFavorite = _mapVocab['favorite'];
+              // bool myFavorite = _mapVocab['favorite'];
 
               return Container(
                 margin:
@@ -311,47 +325,18 @@ class _MainPageState extends State<MainPage> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20.0, vertical: 20.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "${_mapVocab['vocab']}",
-                                    style:
-                                        whiteTextStyle.copyWith(fontSize: 20),
-                                  ),
-                                  Text(
-                                    "${_mapVocab['meaning']}",
-                                    style: whiteTextStyle.copyWith(
-                                        fontSize: 15, color: Colors.grey),
-                                  ),
-                                ],
+                              Text(
+                                "${_mapVocab['vocab']}",
+                                style: whiteTextStyle.copyWith(fontSize: 20),
                               ),
-                              IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    myFavorite = !myFavorite;
-                                  });
-
-                                  VocabServices.updateVocab(
-                                    vocab: _mapVocab['vocab'],
-                                    meaning: _mapVocab['meaning'],
-                                    desc: _mapVocab['desc'],
-                                    docRef: _vocabsDocument.reference,
-                                    keywords: _mapVocab['keywords'],
-                                    favorite: myFavorite,
-                                  );
-                                },
-                                icon: Icon(
-                                  (myFavorite != false)
-                                      ? Icons.bookmark
-                                      : Icons.bookmark_add_outlined,
-                                  size: 35,
-                                  color: Colors.amber,
-                                ),
-                              )
+                              Text(
+                                "${_mapVocab['meaning']}",
+                                style: whiteTextStyle.copyWith(
+                                    fontSize: 15, color: Colors.grey),
+                              ),
                             ],
                           ),
                         ),
