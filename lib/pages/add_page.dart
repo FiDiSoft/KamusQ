@@ -119,7 +119,7 @@ class _AddPageState extends State<AddPage> {
                       fillColor: inputColor,
                       filled: true,
                       focusColor: blue,
-                      hintText: 'type your password...',
+                      hintText: 'type your word...',
                       hintStyle: TextStyle(color: hintColor),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20.0),
@@ -150,7 +150,7 @@ class _AddPageState extends State<AddPage> {
                       fillColor: inputColor,
                       filled: true,
                       focusColor: blue,
-                      hintText: 'type your password...',
+                      hintText: 'type word meaning...',
                       hintStyle: TextStyle(color: hintColor),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20.0),
@@ -180,7 +180,7 @@ class _AddPageState extends State<AddPage> {
                       fillColor: inputColor,
                       filled: true,
                       focusColor: blue,
-                      hintText: 'type your password...',
+                      hintText: 'type word description...',
                       hintStyle: TextStyle(color: hintColor),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20.0),
